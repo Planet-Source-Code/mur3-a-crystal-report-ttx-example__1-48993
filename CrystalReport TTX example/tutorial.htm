@@ -1,0 +1,141 @@
+<p><font color="#FF0000"><b>* The following features may work only if you have 
+Crystal Reports version 8 and above</b></font></p>
+<p><b><font size="4">- what is a TTX file?. </font></b></p>
+<p>A simple text file that defines the structure of your recordset. Has the 
+below format,</p>
+<table border="1" cellpadding="2" style="border-collapse: collapse" bordercolor="#111111" width="762" id="AutoNumber1">
+  <tr>
+    <td width="159"><font color="#008000">Customer ID</font></td>
+    <td width="146"><font color="#008000">&nbsp;long </font></td>
+    <td width="78">&nbsp;</td>
+    <td width="358"><font color="#008000">1</font></td>
+  </tr>
+  <tr>
+    <td width="159"><font color="#008000">Customer Name</font></td>
+    <td width="146"><font color="#008000">&nbsp;string</font></td>
+    <td width="78"><font color="#008000">&nbsp;40</font></td>
+    <td width="358"><font color="#008000">&nbsp;string sample value</font></td>
+  </tr>
+</table>
+<p>1st column - field name, <br>
+2nd column - data type, <br>
+3rd column - length of the field if it is a string field. (should be maximum 
+length)<br>
+last column - sample data</p>
+<p><b><font size="4">- why TTX?.</font></b></p>
+<p>TTX files are associated with CR <b><font color="#800000">'ADO-Fields 
+Definitions Only data source' </font></b>option.( available in Data Explorer)<br>
+Programmers often run into confusions regarding Database Locations when coming 
+to Crystal Reports.. This feature will allow greater flexibility for ADO 
+recordsets and you no more have to fix your report on a specified database.<br>
+&nbsp;</p>
+<p><b><font size="4">- How to create the TTX file?.<br>
+</font></b><br>
+Can be done in several ways,<br>
+<br>
+<b>1. Manual -</b> create a TTX file using the Notepad. provide<font color="#008000"> 
+field name, data type, length, sample value </font>as in the order of your query 
+resultset. <br>
+ex:</p>
+<table border="1" cellpadding="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber2">
+  <tr>
+    <td><font color="#008000">ID </font></td>
+    <td><font color="#008000">long</font></td>
+    <td>&nbsp;</td>
+    <td><font color="#008000">&nbsp;1</font></td>
+  </tr>
+  <tr>
+    <td><font color="#008000">Name</font></td>
+    <td><font color="#008000">String </font></td>
+    <td><font color="#008000">40</font></td>
+    <td><font color="#008000">&nbsp;string sample value</font></td>
+  </tr>
+  <tr>
+    <td><font color="#008000">etc......</font></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p><b>2. using VB code </b>- dynamically create a TTX file using a function. 
+define the following function in a VB module as,<br>
+<br>
+<b><font color="#008000">Declare Function CreateFieldDefFile Lib &quot;p2smon.dll&quot; (lpUnk 
+As Object, _<br>
+ByVal filename As String, ByVal bOverWriteExistingFile As Long) _<br>
+As Long<br>
+</font></b><br>
+Then you can provide a command button and assign the values as follows,</p>
+<p><b><font color="#800000">Private Sub Command1_Click()<br>
+<br>
+&nbsp;&nbsp;&nbsp; CreateFieldDefFile rs1, App.Path &amp; &quot;\customer.ttx&quot;, 1<br>
+<br>
+End Sub</font></b></p>
+<p><font color="#008000">rs1-recordset , customer.ttx -filename, 1 is to 
+overwrite</font><br>
+&nbsp;</p>
+<p><b><font size="4">- How to use the TTX file with Crystal Reports</font></b></p>
+<ul>
+  <li>open Crystal reports</li>
+  <li>choose <font color="#FF00FF">&quot;using Report Expert&quot;</font> and
+  <font color="#FF00FF">'Standard'</font></li>
+  <li>Click <font color="#FF00FF">&quot;Database&quot;</font> button</li>
+  <li>Select &quot;<font color="#FF00FF">More Data Sources &gt; Active data &gt; Active 
+  Data (Field Definitions Only)</font>&quot; </li>
+  <li>Click <font color="#FF00FF">browse</font> and specify your TTX file (customer.ttx)</li>
+  <li>After you click <font color="#FF00FF">OK</font>, customer.ttx will be 
+  displayed under Active Data (Field Definitions Only).</li>
+  <li>Select it and Click <font color="#FF00FF">Add</font></li>
+  <li>Then follow the Normal Procedure to Add your fields and click Finish.</li>
+  <li>Then you may preview your report, for which you will see only one record 
+  containing the sample data you entered when creating the TTX file.</li>
+  <li>Save the report as 'Customer.rpt'</li>
+</ul>
+<p><b><font size="4">- How to use the Above report with VB</font></b></p>
+<ul>
+  <li>Click <font color="#FF00FF">Project&gt;More ActiveX Designers&gt;Crystal reports 
+  8.5</font></li>
+  <li>It may prompt on how to create the Report. Do select <font color="#FF00FF">
+  &quot;From an Existing report&quot;. </font>after you click OK, select the report we 
+  created above (customer.rpt).</li>
+  <li>After that If you specify 'yes' it may create a form containing the 
+  crviewer control(form1) and a designer(crystalreport1).</li>
+  <li>you may code form1 usually as below,</li>
+</ul>
+<blockquote>
+  <p><font color="#000080">Dim Report As New CrystalReport1<br>
+  Dim cn As Connection<br>
+  Dim rs1 As Recordset<br>
+  <br>
+  <b><font size="4">Private Sub Form_Load()<br>
+  </font></b><br>
+  Set cn = New Connection <br>
+  Set rs1 = New Recordset<br>
+  path = App.path &amp; &quot;\db1.mdb&quot;</font></p>
+  <p><font color="#000080">cn.Open &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data 
+  Source=&quot; &amp; path &amp; &quot;;Persist Security Info=False&quot;<br>
+  rs1.Open &quot;select * from customer&quot;, cn<br>
+  <br>
+  Report.DiscardSavedData<br>
+  Report.Database.SetDataSource rs1, 3, 1<br>
+  <br>
+  CRViewer1.ReportSource = Report<br>
+  CRViewer1.ViewReport<br>
+  <br>
+  <b><font size="4">End Sub</font></b></font></p>
+</blockquote>
+<ul>
+  <li>The report is based on customer.ttx file, so even if you change the 
+  location of the database (db1.mdb)&nbsp; or change the name, you only hav to change the database 
+  location (connection) in VB code. The report will execute regardless of the 
+  database location.</li>
+</ul>
+<p><b>Hope you find it useful. If you hav problems &amp; comments pls post it in PSC.</b></p>
+<p><b>Author: Murshid (Mur3)</b></p>
+<p><b>Reference : Crystal decisions official guide available at crystal website
+<a href="http://support.crystaldecisions.com/communityCS/TechnicalPapers/scr8_ttxado.pdf.asp">
+http://support.crystaldecisions.com/communityCS/TechnicalPapers/scr8_ttxado.pdf.asp</a></b></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

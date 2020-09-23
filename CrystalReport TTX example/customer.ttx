@@ -1,0 +1,19 @@
+; Field definition file for table: ADORecordset
+Customer ID	long		1
+Customer Credit ID	long		1
+Customer Name	string	40	string sample value
+Contact First Name	string	30	string sample value
+Contact Last Name	string	30	string sample value
+Contact Title	string	5	string sample value
+Contact Position	string	30	string sample value
+Last Year's Sales	currency		1.00
+Address1	string	60	string sample value
+Address2	string	20	string sample value
+City	string	20	string sample value
+Region	string	30	string sample value
+Country	string	30	string sample value
+Postal Code	string	10	string sample value
+E-mail	string	50	string sample value
+Web Site	string	50	string sample value
+Phone	string	20	string sample value
+Fax	string	20	string sample value
